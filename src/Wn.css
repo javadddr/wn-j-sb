@@ -296,11 +296,12 @@ cursor: pointer;
   padding: 3px;
   border-radius: 10px;
   padding-left: 10px;
+     min-width: 200px;
   font-family:'inter','Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 #drop1items{
   border: 1px solid black;
-  min-width: 100%;
+  min-width: 200px;
 }
 .css-1g8zlpr-control{
 
