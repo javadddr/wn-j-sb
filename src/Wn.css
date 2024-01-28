@@ -19,7 +19,16 @@ body {
     overflow: hidden;
     border: 1px solid;
 }
-
+.wn-container2 {
+  width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #d7d6d6;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  border: 1px solid;
+}
 
 #frequent-dropoffs, .month-selector {
     display: flex;
@@ -34,10 +43,10 @@ body {
 
 
 .wn-container input, .wn-container select {
-    width: 100%;
+   
     padding: 10px 15px;
     margin-bottom: 20px;
-    border: 1px solid #cfd8dc;
+  
     border-radius: 4px;
     font-size: 16px;
     background-color: #ffffff;
@@ -50,6 +59,27 @@ body {
 .wn-container input:focus, .wn-container select:focus {
     outline: none;
     border-color: #29b6f6;
+}
+
+
+.wn-container2 input, .wn-container2 select {
+   
+  padding: 10px 15px;
+  margin-bottom: 20px;
+width: 70%;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: #ffffff;
+  color: #455a64;
+  margin-left: 5px;
+}
+.wn-container2 input{
+margin-top: 0px;
+}
+
+.wn-container2 input:focus, .wn-container2 select:focus {
+  outline: none;
+  border-color: #29b6f6;
 }
 
 
@@ -83,7 +113,16 @@ body {
     color: #e53935;
     text-align: center;
     margin-bottom: 20px;
-    font-size: 16px;
+    font-size: 26px;
+    background-color: #ffd9d9;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    font-family:'Poppins','Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    border: 1px dashed black ;
+
 }
 
 
@@ -112,12 +151,30 @@ body {
 }
 
 
-.material-class-buttons{
+.material-class-buttons {
   display: flex;
   width: 100%;
   flex-wrap: wrap;
   justify-content: center;
+  max-height: 100px; /* Set maximum height */
+  overflow-y: auto; /* Enable vertical scrolling */
+  margin-bottom: 30px;
+  border: 1px solid rgb(0, 0, 0);
+  -webkit-box-shadow: 14px 9px 6px -4px rgba(112,22,255,0.26); 
+  box-shadow: 14px 9px 6px -4px rgba(112,22,255,0.26);
+  padding: 5px;
+  border-radius: 5px;
+
+ 
+  &::-webkit-scrollbar {
+      display: none;
+  }
+
+ 
+  -ms-overflow-style: none; 
+  scrollbar-width: none;
 }
+
 
 #dropclass{
   width: 96.5%;
@@ -125,12 +182,14 @@ body {
 }
 #wnumberj{
   width: 24.5%;
+ 
 }
 
 .line-item input{
   background-color: #ffffff;
   border-radius: 0;
   margin-bottom: 0;
+  border: 1px solid black;
 }
 .logo-container {
   position: absolute;
@@ -201,6 +260,24 @@ body {
   color:#e5e8ea;
 }
 
+
+.wn-container2 input::-webkit-input-placeholder {
+  color:#e5e8ea;
+}
+
+.wn-container2 input::-moz-placeholder { 
+  color:#e5e8ea;
+  opacity: 1;
+}
+
+.wn-container2 input:-ms-input-placeholder {
+  color:#e5e8ea;
+}
+
+.wn-container2 input:-moz-placeholder {
+  color:#e5e8ea;
+}
+
 .dodi{
   color: #000000;
   font-family:'inter','Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -223,4 +300,53 @@ cursor: pointer;
 }
 #drop1items{
   border: 1px solid black;
+  min-width: 100%;
+}
+.css-1g8zlpr-control{
+
+  min-width: 300px;
+  max-height: 40px;
+}
+.css-1fdsijx-ValueContainer{
+  min-width: 200px;
+  max-height: 30px;
+}
+.css-dd1q7m-control{
+  display: flex;
+}
+.css-1hb7zxy-IndicatorsContainer{
+  max-height: 10px;
+}
+
+.dropformetals.css-b62m3t-container{
+display: flex;
+}
+
+/* Add this to your CSS file */
+.react-select__menu::-webkit-scrollbar {
+    width: 5px;
+}
+
+.react-select__menu::-webkit-scrollbar-thumb {
+    background: #888; 
+    border-radius: 10px;
+}
+
+.react-select__menu::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+}
+
+
+
+
+.input-error {
+  animation: shake 0.5s ease-in-out;
+  border: 1px solid red;
+}
+
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
 }

@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import Select from 'react-select'; // Import from react-select
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+
 import dropoffMaterials from './DropoffMaterials';
 import './Wn.css';
 import trash from "./trash-bin.png"
 import logo from './logoi.jpg';
-
+//dooooone
 const Wn = ({ apiKey }) => {
   const initialLineItems = () => new Array(3).fill(null).map(() => ({
     materialClassId: '',
@@ -130,13 +131,6 @@ const [selectedDropoff, setSelectedDropoff] = useState(null);
     setFilteredMaterials(relatedMaterials);
 };
 
-
-  
-
-
-
-
-
 const handleAddLineItem = () => {
     setLineItems([...lineItems, { materialClassId: '', mappedMaterialId: '', weight: '', pricePerTon: '', totalSum: '' }]);
 };
@@ -160,11 +154,19 @@ const validateAndSubmit = async () => {
 const filledLineItems = lineItems.filter(item => 
     item.mappedMaterialId || item.weight || item.pricePerTon || item.totalSum
 );
+for (const item of filledLineItems) {
+    const calculatedTotal = (parseFloat(item.weight) || 0) * (parseFloat(item.pricePerTon) || 0);
+    if (calculatedTotal !== parseFloat(item.totalSum)) {
+        alert(`Discrepancy in totals for material ID ${item.mappedMaterialId}: Entered Sum = ${item.totalSum}, Calculated Sum = ${calculatedTotal}`);
+        return; // Stop the submission if there's a discrepancy
+    }
+}
 
 const newLineItems = filledLineItems.map(item => ({
     dropoffMaterialId: parseInt(item.mappedMaterialId) || null,
     weight: parseFloat(item.weight) || 0,
-  
+    pricePerTon: parseInt(item.pricePerTon) || 0,
+    total: (parseFloat(item.weight) || 0) * (parseInt(item.pricePerTon) || 0)
 }));
 
 const data = {
@@ -173,10 +175,10 @@ const data = {
     lineItems: newLineItems
 };
 
- 
+
     try {
         
-        const response = await fetch(`https://api-dev.scrapbees.com/logistics/dropoffs/${dropoffId}/documents/deliverynotes`, {
+        const response = await fetch(`https://api-dev.scrapbees.com/logistics/dropoffs/${dropoffId}/documents/creditnotes`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${apiKey}`,
@@ -191,7 +193,7 @@ const data = {
 
         const result = await response.json();
         console.log('Success:', result);
-       
+      
 
     } catch (error) {
         console.error('Error:', error);
@@ -231,107 +233,107 @@ const data = {
         return a.name.localeCompare(b.name);
     });
 
-            return (
-                <div>
-                
-                <div className="logo-container">
-            <a href="https://schrottbienen.de/" target="_blank" rel="noopener noreferrer">
-                <img src={logo} alt="Company Logo" />
-            </a>
-        </div>
+    return (
+        <div>
+        
+        <div className="logo-container">
+    <a href="https://schrottbienen.de/" target="_blank" rel="noopener noreferrer">
+        <img src={logo} alt="Company Logo" />
+    </a>
+</div>
 
-                    <div className="wn-container">
-                    {error && <div className="error-message">{error}</div>}
-                    <div className='DropoffsL'> Dropoffs:</div>
-                    
-                        <div id='frequent-dropoffs'>
-                        
-                            {frequentOptions.map((option, index) => (
-                                <button className='button-13' key={index} onClick={() => {
-                                    const foundDropoff = dropoffData.find(dropoff => dropoff.name === option);
-                                    handleDropoffSelect(option, foundDropoff ? foundDropoff.id : null);
-                                }}>
-                                    {option}
-                                </button>
-                            ))}
-                        </div>
+        <div className="wn-container2">
+        {error && <div className="error-message">{error}</div>}
+        <div className='DropoffsL'> Dropoffs:</div>
+           
+            <div id='frequent-dropoffs'>
+              
+                {frequentOptions.map((option, index) => (
+                    <button className='button-13' key={index} onClick={() => {
+                        const foundDropoff = dropoffData.find(dropoff => dropoff.name === option);
+                        handleDropoffSelect(option, foundDropoff ? foundDropoff.id : null);
+                    }}>
+                        {option}
+                    </button>
+                ))}
+            </div>
 
-                        <input
-                        id='dropclass'
-                        type="text"
-                        placeholder="Search Dropoff"
-                        value={searchTerm}
-                        
-                        onChange={handleSearchChange}
-                        onFocus={() => setDropdownVisible(true)}
-                        onBlur={() => {
-                            setTimeout(() => {
-                                if (!keepDropdownOpen) {
-                                    setDropdownVisible(false);
-                                }
-                            }, 100);
-                        }}
-                    />
+            <input
+            id='dropclass'
+            type="text"
+            placeholder="Search Dropoff"
+            value={searchTerm}
+            
+            onChange={handleSearchChange}
+            onFocus={() => setDropdownVisible(true)}
+            onBlur={() => {
+                setTimeout(() => {
+                    if (!keepDropdownOpen) {
+                        setDropdownVisible(false);
+                    }
+                }, 100);
+            }}
+        />
 
 
-                    {dropdownVisible && searchTerm && (
-                    <select id='drop1items'
-                    onFocus={() => setKeepDropdownOpen(true)}
-                    onChange={(e) => {
-                        const selectedId = e.target.value;
-                        const selectedDropoff = dropoffData.find(dropoff => String(dropoff.id) === selectedId);
+{dropdownVisible && searchTerm && (
+ <select id='drop1items'
+ onFocus={() => setKeepDropdownOpen(true)}
+ onChange={(e) => {
+    const selectedId = e.target.value;
+    const selectedDropoff = dropoffData.find(dropoff => String(dropoff.id) === selectedId);
 
-                        if (selectedDropoff) {
-                            handleDropoffSelect(selectedDropoff.name, selectedId);
-                        } else {
-                            console.log('Selected ID not found in dropoff data:', selectedId);
-                            console.log('Dropoff Data:', dropoffData);
-                        }
-                    }}
-                    size="5"
-                    onBlur={() => setKeepDropdownOpen(false)}
-                    >
-                    {filteredDropoffs.map(dropoff => (
-                        <option id='drop1item' key={dropoff.id} value={dropoff.id}>{dropoff.name} - {dropoff.city}</option>
-                    ))}
-                    </select>
+    if (selectedDropoff) {
+        handleDropoffSelect(selectedDropoff.name, selectedId);
+    } else {
+        console.log('Selected ID not found in dropoff data:', selectedId);
+        console.log('Dropoff Data:', dropoffData);
+    }
+}}
+ size="5"
+ onBlur={() => setKeepDropdownOpen(false)}
+>
+ {filteredDropoffs.map(dropoff => (
+     <option id='drop1item' key={dropoff.id} value={dropoff.id}>{dropoff.name} - {dropoff.city}</option>
+ ))}
+</select>
 
-                    )}
-                    <div className='DropoffsL'> Date:</div>
-                    <div className="month-selector">
-                        {months.map((month, index) => (
-                            <button className='button-13' key={index} onClick={() => handleMonthSelect(index)}>
-                                {month}
-                            </button>
-                        ))}
-                    </div>
-                    <div className={formSubmitted && !issuedAt ? 'input-error' : ''}>
-                    <DatePicker
-                        className='dodi'
-                        selected={issuedAt}
-                        onChange={setIssuedAt}
-                        showYearDropdown
-                        scrollableYearDropdown
-                        yearDropdownItemNumber={3}
-                        minDate={new Date("2022-01-01")}
-                        maxDate={new Date("2024-12-31")}
-                        style={{ border: getBorderStyle(issuedAt) }}
-                    />
+)}
+<div className='DropoffsL'> Date:</div>
+<div className="month-selector">
+    {months.map((month, index) => (
+        <button className='button-13' key={index} onClick={() => handleMonthSelect(index)}>
+            {month}
+        </button>
+    ))}
+</div>
+<div className={formSubmitted && !issuedAt ? 'input-error' : ''}>
+<DatePicker
+    className='dodi'
+    selected={issuedAt}
+    onChange={setIssuedAt}
+    showYearDropdown
+    scrollableYearDropdown
+    yearDropdownItemNumber={3}
+    minDate={new Date("2022-01-01")}
+    maxDate={new Date("2024-12-31")}
+    style={{ border: getBorderStyle(issuedAt) }}
+/>
 
-                    </div>
-                    <div className='DropoffsL'> Weight Note Number:</div>
-                    <div>
-                    <input
-                        id='wnumberj'
-                        type="text" 
-                        placeholder="Document Number" 
-                        value={documentNumber} 
-                        onChange={(e) => setDocumentNumber(e.target.value)}
-                        className={error && !documentNumber && (selectedDropoff?.hasWeightnoteNumbers) ? 'input-error' : ''}
-                    />
+</div>
+<div className='DropoffsL'> Weight Note Number:</div>
+<div>
+<input
+    id='wnumberj'
+    type="text" 
+    placeholder="Document Number" 
+    value={documentNumber} 
+    onChange={(e) => setDocumentNumber(e.target.value)}
+    className={error && !documentNumber && (selectedDropoff?.hasWeightnoteNumbers) ? 'input-error' : ''}
+/>
 
-                    </div>
-                    <div className='DropoffsL'> Collected Metals:</div>
+</div>
+<div className='DropoffsL'> Collected Metals:</div>
 
                     {dropoffId && (
                                 <div className="material-class-buttons">
@@ -343,10 +345,10 @@ const data = {
                                     ))}
                                 </div>
                             )}
-                    {lineItems.map((item, index) => (
-                    
-                        <div key={index} className="line-item">
-                    <Select className='dropformetals'
+{lineItems.map((item, index) => (
+  
+    <div key={index} className="line-item">
+  <Select className='dropformetals'
                         value={{ label: item.materialClassId, value: item.materialClassId }}
                         onChange={(selectedOption) => {
                             const selectedMaterial = dropoffMaterialsData.find(material => material.name === selectedOption.value);
@@ -382,30 +384,30 @@ const data = {
                     />
 
      
-                <input
-                    type="text"
-                    placeholder="Material Class ID"
-                    value={item.materialClassId}
-                    onChange={(e) => {
-                        // Update only materialDisplayName on user input
-                        const newLineItems = [...lineItems];
-                        newLineItems[index].materialDisplayName = e.target.value;
-                        setLineItems(newLineItems);
-                    }}
-                    onFocus={() => {
-                        const updatedVisibility = materialDropdownVisibility.map((v, i) => i === index);
-                        setMaterialDropdownVisibility(updatedVisibility);
-                    }}
-                    onBlur={() => {
-                    
-                        setTimeout(() => {
-                            if (!keepDropdownOpen) {
-                                const updatedVisibility = materialDropdownVisibility.map((v, i) => false);
-                                setMaterialDropdownVisibility(updatedVisibility);
-                            }
-                        }, 100);
-                    }}
-                />
+   <input
+    type="text"
+    placeholder="Material Class ID"
+    value={item.materialClassId}
+    onChange={(e) => {
+        // Update only materialDisplayName on user input
+        const newLineItems = [...lineItems];
+        newLineItems[index].materialDisplayName = e.target.value;
+        setLineItems(newLineItems);
+    }}
+    onFocus={() => {
+        const updatedVisibility = materialDropdownVisibility.map((v, i) => i === index);
+        setMaterialDropdownVisibility(updatedVisibility);
+    }}
+    onBlur={() => {
+       
+        setTimeout(() => {
+            if (!keepDropdownOpen) {
+                const updatedVisibility = materialDropdownVisibility.map((v, i) => false);
+                setMaterialDropdownVisibility(updatedVisibility);
+            }
+        }, 100);
+    }}
+/>
 
 
 
@@ -414,10 +416,19 @@ const data = {
                         newLineItems[index].weight = e.target.value;
                         setLineItems(newLineItems);
                     }} />
-                
+                   <input type="number" placeholder="Price per ton" value={item.pricePerTon} onChange={(e) => {
+                        const newLineItems = [...lineItems];
+                        newLineItems[index].pricePerTon = e.target.value;
+                        setLineItems(newLineItems);
+                    }} />
+                      <input type="number" placeholder="Total Sum" value={item.totalSum} onChange={(e) => {
+                        const newLineItems = [...lineItems];
+                        newLineItems[index].totalSum = e.target.value;
+                        setLineItems(newLineItems);
+                    }} />
                       <button onClick={() => handleRemoveLineItem(index)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
-                            <img src={trash} alt="Remove" style={{ width: '20px', height: '20px' }}/>
-                        </button>
+    <img src={trash} alt="Remove" style={{ width: '20px', height: '20px' }}/>
+</button>
 
                 </div>
             ))}
