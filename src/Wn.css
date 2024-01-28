@@ -333,10 +333,12 @@ display: flex;
 .react-select__menu::-webkit-scrollbar-thumb {
     background: #888; 
     border-radius: 10px;
+     min-width: 200px;
 }
 
 .react-select__menu::-webkit-scrollbar-thumb:hover {
     background: #555; 
+     min-width: 200px;
 }
 
 
