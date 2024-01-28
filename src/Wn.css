@@ -313,6 +313,7 @@ cursor: pointer;
 }
 .css-dd1q7m-control{
   display: flex;
+    min-width: 200px;
 }
 .css-1hb7zxy-IndicatorsContainer{
   max-height: 10px;
